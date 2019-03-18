@@ -45,23 +45,21 @@ function sendEMail(destiatario, HTMLDoEmail){
 
 function main() {
 
-    //const knexo = util.connectKnex()
-
-    app.get('/db', (req, res) => {
-        const knex = util.connectKnex();
+    // app.get('/db', (req, res) => {
+    //     const knex = util.connectKnex();
     
-        knex.select('*').from('emenda')
-            .then(resultado => {
-                knex.destroy();
-                res.status(200).json(resultado);
-                console.log(resultado)
-            })
-            .catch(erro => {
-                console.log(erro);
-                knex.destroy();
-                res.sendStatus(500);
-            })
-    });
+    //     knex.select('*').from('emenda')
+    //         .then(resultado => {
+    //             knex.destroy();
+    //             res.status(200).json(resultado);
+    //             console.log(resultado)
+    //         })
+    //         .catch(erro => {
+    //             console.log(erro);
+    //             knex.destroy();
+    //             res.sendStatus(500);
+    //         })
+    // });
    
 
     arrayDeHTMLDeEmendas = []
@@ -85,7 +83,24 @@ function main() {
         sendEMail('luis.taira@mctic.gov.br', HTMLString.toString())
             
     })
-   util.wait()
+
+    //wait
+    // await util.sleep( 1000*60*60*4 )
+
+    // while ( new Date().getHours() != 11) {
+    //     while ( new Date().getHours() > 11 || new Date().getHours() < 6  ) {
+
+    //         await util.sleep( 1000*60*60*4 )
+    //     }
+
+    //     while ( new Date().getHours() > 6 && new Date().getHours() < 10) {
+
+    //         await util.sleep( 1000*60*30 )
+    //     }
+
+    //     await util.sleep ( 1000*60 )
+    // }
 
 }
+
 main()

@@ -1,22 +1,27 @@
-//var util = require('./utils.js')
+var util = require('./utils.js')
 let knex = require('knex');
 
 module.exports = {
-    wait: async function wait() {
-        // while (true) {
-        //     while ( new Date().getHours() != 11) {
-        //         while ( new Date().getHours() > 6 && new Date().getHours() < 10) {
-        //             await sleep(1000*60*30)
-        //             while ( new Date().getHours() > 11 || new Date().getHours() <= 5  ) {
-        //                 await sleep(1000*60*60*4)
-        //             }
-        //         }
-        //     }
-        // }
-    },
 
     sleep: function sleep(ms) {
         return new Promise(resolve => setTimeout( resolve, ms ));
+    },
+
+    wait: async function wait() {
+        
+        while ( new Date().getHours() != 11) {
+            while ( new Date().getHours() > 11 || new Date().getHours() <= 5  ) {
+
+                await util.sleep( 1000*60*60*4 )
+            }
+
+            while ( new Date().getHours() > 6 && new Date().getHours() < 10) {
+
+                await util.sleep( 1000*60*30 )
+            }
+
+            await util.sleep ( 1000*60 )
+        }
     },
 
     getDateString: function getDateString() {

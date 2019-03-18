@@ -11,8 +11,18 @@ module.exports.geraHTMLDaEmenda = function(ano, numero, autor, valor) {
     return HTMLDaEmenda.toString()
 }
 
-module.exports.geraHTMLDoEmail = function(dataDeHoje, proximaData, HTMLEmenda, diasRestantes) {
+// module.exports.randaCor = function() {
+//     var randa = Math.floor((Math.random() * 3) + 1);
+
+//     switch( randa ) [
+//         case 1
+//     ]
+// }
+
+module.exports.geraHTMLDoEmail = function(dataDeHoje, proximaData, HTMLEmenda, diasRestantes, cor) {
     
+    //azul MCTIC #028AC6
+    //roxo #7656FF
     let HTMLString = 
     `
     <!DOCTYPE html>
@@ -37,11 +47,12 @@ module.exports.geraHTMLDoEmail = function(dataDeHoje, proximaData, HTMLEmenda, d
     h1 {
     color: white;
     font-family:  arial bold, sans-serif;
-    background-color: #3CAC30;
+    background-color: #7656FF; 
     padding: 8px;
     }
     h2 {
     font-family: arial, sans-serif;
+    color: #7656FF;
     }
     p {
     font-family: arial, sans-serif;
