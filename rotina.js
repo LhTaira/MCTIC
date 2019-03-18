@@ -61,42 +61,42 @@ async function main( resultado, num ) {
     switch( num ) {
         case 1:
         for( var i=1; i<resultado.length; i++ ) {
-            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_indicacao_beneficiario ))
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_indicacao_beneficiario ))
         }
         nomeData = 'indicacao beneficiario'
         break;
 
         case 2:
         for( var i=1; i<resultado.length; i++ ) {
-            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_cadastramento_proposta ))
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_cadastramento_proposta ))
         }
         nomeData = 'Cadastrameto da proposta'
         break;
 
         case 3:
         for( var i=1; i<resultado.length; i++ ) {
-            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_analise_proposta ))
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_analise_proposta ))
         }
         nomeData = 'Analise da proposta'
         break;
 
         case 4:
         for( var i=1; i<resultado.length; i++ ) {
-            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_celebracao_convenio_baixa ))
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_celebracao_convenio_baixa ))
         }
         nomeData = 'celebracao convenio'
         break;
 
         case 5:
         for( var i=1; i<resultado.length; i++ ) {
-            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_celebracao_convenio_media ))
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_celebracao_convenio_media ))
         }
         nomeData = 'celebracao convenio'
         break;
 
         case 6:
         for( var i=1; i<resultado.length; i++ ) {
-            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_celebracao_convenio_alta ))
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_celebracao_convenio_alta ))
         }
         nomeData = 'celebracao convenio'
         break;
@@ -133,7 +133,7 @@ async function main( resultado, num ) {
     //     }
 
     //     while ( new Date().getHours() > 6 && new Date().getHours() < 10) {
-        
+
     //         await util.sleep( 1000*60*30 )
     //     }
 
@@ -147,12 +147,12 @@ async function damn(){
     const con = connection()
     const notificacao = new NotificacaoDAO(con);
 
-    notificacao.getNotificacao1( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 1 ) } } )
-    notificacao.getNotificacao2( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 2 ) } } )
-    notificacao.getNotificacao3( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 3 ) } } )
-    notificacao.getNotificacao4( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 4 ) } } )
-    notificacao.getNotificacao5( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 5 ) } } )
-    notificacao.getNotificacao6( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 6 ) } } )
+    notificacao.getNotificacao1( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 1 ) } } )
+    notificacao.getNotificacao2( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 2 ) } } )
+    notificacao.getNotificacao3( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 3 ) } } )
+    notificacao.getNotificacao4( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 4 ) } } )
+    notificacao.getNotificacao5( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 5 ) } } )
+    notificacao.getNotificacao6( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 6 ) } } )
 
 }
 

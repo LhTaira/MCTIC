@@ -8,7 +8,7 @@ class NotificacaoDAO {
     getNotificacao1(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_indicacao_beneficiario,NOW()) AS dias_indicacao_beneficiario,
-        emenda.cod_emenda, notificacao.* FROM emenda
+        emenda.num_emenda, notificacao.* FROM emenda
         INNER JOIN legislacao ON emenda.ano = legislacao.ano
         INNER JOIN notificacao ON legislacao.ano = notificacao.ano
         WHERE DATEDIFF(legislacao.dt_indicacao_beneficiario,NOW()) BETWEEN 0 AND notificacao.indicacao_beneficiario`,
@@ -19,10 +19,10 @@ class NotificacaoDAO {
     getNotificacao2(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_cadastramento_proposta,NOW()) AS dias_cadastramento_proposta,
-        emenda.cod_emenda, notificacao.* FROM emenda
+        emenda.num_emenda, notificacao.* FROM emenda
         INNER JOIN legislacao ON emenda.ano = legislacao.ano
         INNER JOIN notificacao ON legislacao.ano = notificacao.ano
-        WHERE DATEDIFF(legislacao.dt_cadastramento_proposta,NOW()) BETWEEN 0 AND notificacao.cadastramento_proposta`,
+        WHERE DATEDIFF(legislacao.dt_cadastramento_proposta,NOW()) BETWEEN -1 AND notificacao.cadastramento_proposta`,
         callback);
     }
 
@@ -30,7 +30,7 @@ class NotificacaoDAO {
     getNotificacao3(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_analise_proposta,NOW()) AS dias_analise_proposta,
-        emenda.cod_emenda, notificacao.* FROM emenda
+        emenda.num_emenda, notificacao.* FROM emenda
         INNER JOIN legislacao ON emenda.ano = legislacao.ano
         INNER JOIN notificacao ON legislacao.ano = notificacao.ano
         WHERE DATEDIFF(legislacao.dt_analise_proposta,NOW()) BETWEEN 0 AND notificacao.cadastramento_proposta`,
@@ -41,7 +41,7 @@ class NotificacaoDAO {
     getNotificacao4(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_celebracao_convenio,NOW()) AS dias_celebracao_convenio_baixa,
-        emenda.cod_emenda, notificacao.* FROM emenda
+        emenda.num_emenda, notificacao.* FROM emenda
         INNER JOIN legislacao ON emenda.ano = legislacao.ano
         INNER JOIN notificacao ON legislacao.ano = notificacao.ano
         WHERE DATEDIFF(legislacao.dt_celebracao_convenio,NOW()) = notificacao.celebracao_convenio_baixa`,
@@ -52,7 +52,7 @@ class NotificacaoDAO {
     getNotificacao5(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_celebracao_convenio,NOW()) AS dias_celebracao_convenio_media,
-        emenda.cod_emenda, notificacao.* FROM emenda
+        emenda.num_emenda, notificacao.* FROM emenda
         INNER JOIN legislacao ON emenda.ano = legislacao.ano
         INNER JOIN notificacao ON legislacao.ano = notificacao.ano
         WHERE DATEDIFF(legislacao.dt_celebracao_convenio,NOW()) = notificacao.celebracao_convenio_media`,
@@ -63,7 +63,7 @@ class NotificacaoDAO {
     getNotificacao6(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_celebracao_convenio,NOW()) AS dias_celebracao_convenio,
-        emenda.cod_emenda, notificacao.* FROM emenda
+        emenda.num_emenda, notificacao.* FROM emenda
         INNER JOIN legislacao ON emenda.ano = legislacao.ano
         INNER JOIN notificacao ON legislacao.ano = notificacao.ano
         WHERE DATEDIFF(legislacao.dt_celebracao_convenio,NOW()) BETWEEN 0 AND notificacao.celebracao_convenio_alta`,

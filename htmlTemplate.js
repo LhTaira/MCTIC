@@ -2,7 +2,7 @@ module.exports.geraHTMLDaEmenda = function(numero, dias) {
     let HTMLDaEmenda = 
     `
     <tr>
-    <td>${ano}</td>
+    <td>${numero}</td>
     <td>${dias}</td>
 
   </tr>
@@ -66,7 +66,7 @@ module.exports.geraHTMLDoEmail = function(dataDeHoje, proximaData, HTMLEmenda, d
     <p>${proximaData}das seguintes emandas é em ${diasRestantes}</p>
     <table>
     <tr>
-    <th>Número</th>
+    <th>Codigo</th>
     <th>Dias restantes para o ${nomeData}</th>
     </tr>
     ${HTMLEmenda}
