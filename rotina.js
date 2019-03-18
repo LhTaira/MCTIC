@@ -1,7 +1,18 @@
 var templater = require('./htmlTemplate.js')
 var nodemailer = require("nodemailer");
 var app = require('express')();
+
+// let express = require('express');
+// let app = express()
+
 var util = require('./utils.js')
+const NotificacaoDAO = require('./notificacaoDAO.js')()
+
+const connection = require('./connection.js')()
+
+
+
+
 
 //Rotina do e mail
 //verificar quais emendas precisam que e mails sejam enviados hoje
@@ -23,7 +34,7 @@ function sendEMail(destiatario, HTMLDoEmail){
     });
 
     var mailOptions = {
-        from: '<lol@lol.com>',
+        from: 'noreply@mctic.gov.br',
         to: destiatario,
         subject: 'E-mail',
         //text: HTMLDoEmail,
@@ -34,51 +45,79 @@ function sendEMail(destiatario, HTMLDoEmail){
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error);
-            res.status(500).send('Erro ao enviar o email.');
+            //res.status(500).send('Erro ao enviar o email.');
         } else {
             console.log('Email enviado: ' + info.response + '\tData: ' + util.getTimeString(date) );
-            res.status(200).send('Email enviado com sucesso.');
+            //res.status(200).send('Email enviado com sucesso.');
         }
     });
-
 }
 
-function main() {
-
-    // app.get('/db', (req, res) => {
-    //     const knex = util.connectKnex();
+async function main( resultado, num ) {
     
-    //     knex.select('*').from('emenda')
-    //         .then(resultado => {
-    //             knex.destroy();
-    //             res.status(200).json(resultado);
-    //             console.log(resultado)
-    //         })
-    //         .catch(erro => {
-    //             console.log(erro);
-    //             knex.destroy();
-    //             res.sendStatus(500);
-    //         })
-    // });
-   
-
     arrayDeHTMLDeEmendas = []
+    let nomeData
 
-    for( var i=1; i<6; i++){
-        arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda('2019', `${i}`.toString(), 'Luis', `${i*4587}`.toString()))//cria tabela fake
+    switch( num ) {
+        case 1:
+        for( var i=1; i<resultado.length; i++ ) {
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_indicacao_beneficiario ))
+        }
+        nomeData = 'indicacao beneficiario'
+        break;
+
+        case 2:
+        for( var i=1; i<resultado.length; i++ ) {
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_cadastramento_proposta ))
+        }
+        nomeData = 'Cadastrameto da proposta'
+        break;
+
+        case 3:
+        for( var i=1; i<resultado.length; i++ ) {
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_analise_proposta ))
+        }
+        nomeData = 'Analise da proposta'
+        break;
+
+        case 4:
+        for( var i=1; i<resultado.length; i++ ) {
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_celebracao_convenio_baixa ))
+        }
+        nomeData = 'celebracao convenio'
+        break;
+
+        case 5:
+        for( var i=1; i<resultado.length; i++ ) {
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_celebracao_convenio_media ))
+        }
+        nomeData = 'celebracao convenio'
+        break;
+
+        case 6:
+        for( var i=1; i<resultado.length; i++ ) {
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].cod_emenda, resultado[i].dias_celebracao_convenio_alta ))
+        }
+        nomeData = 'celebracao convenio'
+        break;
+        
+        default:
+        console.log('lol')
     }
+
 
     HTMLDasEmendas = arrayDeHTMLDeEmendas.toString().replace(/,/g, '')//transforma o array em uma string 
 
-    var HTMLString = templater.geraHTMLDoEmail(util.getDateString() + ' ' + new Date().toLocaleTimeString(), 'A data de analise de proposta', HTMLDasEmendas.toString(), '3 dias').toString();  //recebe (dataDeHohe, proximaData, HTMLEmenda, diasRestantes)
+    var HTMLString = templater.geraHTMLDoEmail(util.getDateString() + ' ' + new Date().toLocaleTimeString(), 'A data de analise de proposta', HTMLDasEmendas.toString(), '3 dias', nomeData ).toString();  //recebe (dataDeHohe, proximaData, HTMLEmenda, diasRestantes, nomeData)
     //console.log(HTMLString)
 
-    app.listen(3000, () => {
+    var server = app.listen(3000, () => {
         console.log("Servidor Rodando...");
     })
     
     //sendEMail('luis.taira@mctic.gov.br', HTMLString.toString())
-
+    
+    sendEMail('luis.taira@mctic.gov.br', HTMLString.toString())
     app.get('/email', async  (req, res) => {
         sendEMail('luis.taira@mctic.gov.br', HTMLString.toString())
             
@@ -94,13 +133,28 @@ function main() {
     //     }
 
     //     while ( new Date().getHours() > 6 && new Date().getHours() < 10) {
-
+        
     //         await util.sleep( 1000*60*30 )
     //     }
 
     //     await util.sleep ( 1000*60 )
     // }
+    server.close();
+}
+
+async function damn(){
+    //main()
+    const con = connection()
+    const notificacao = new NotificacaoDAO(con);
+
+    notificacao.getNotificacao1( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 1 ) } } )
+    notificacao.getNotificacao2( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 2 ) } } )
+    notificacao.getNotificacao3( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 3 ) } } )
+    notificacao.getNotificacao4( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 4 ) } } )
+    notificacao.getNotificacao5( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 5 ) } } )
+    notificacao.getNotificacao6( async ( erro, resultado )  => { if( erro == null ) { await main( resultado, 6 ) } } )
 
 }
 
-main()
+damn()
+

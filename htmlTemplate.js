@@ -1,11 +1,10 @@
-module.exports.geraHTMLDaEmenda = function(ano, numero, autor, valor) {
+module.exports.geraHTMLDaEmenda = function(numero, dias) {
     let HTMLDaEmenda = 
     `
     <tr>
     <td>${ano}</td>
-    <td>${numero}</td>
-    <td>${autor}</td>
-    <td>${valor}</td>
+    <td>${dias}</td>
+
   </tr>
     `
     return HTMLDaEmenda.toString()
@@ -19,7 +18,7 @@ module.exports.geraHTMLDaEmenda = function(ano, numero, autor, valor) {
 //     ]
 // }
 
-module.exports.geraHTMLDoEmail = function(dataDeHoje, proximaData, HTMLEmenda, diasRestantes, cor) {
+module.exports.geraHTMLDoEmail = function(dataDeHoje, proximaData, HTMLEmenda, diasRestantes, nomeData) {
     
     //azul MCTIC #028AC6
     //roxo #7656FF
@@ -67,10 +66,8 @@ module.exports.geraHTMLDoEmail = function(dataDeHoje, proximaData, HTMLEmenda, d
     <p>${proximaData}das seguintes emandas é em ${diasRestantes}</p>
     <table>
     <tr>
-    <th>Ano</th>
     <th>Número</th>
-    <th>Autor</th>
-    <th>Valor</th>
+    <th>Dias restantes para o ${nomeData}</th>
     </tr>
     ${HTMLEmenda}
     </table>
