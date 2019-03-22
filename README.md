@@ -1,12 +1,12 @@
-##Rotina de notificação
-
-digite
+Rotina de notificação
+=====================
+Digite
 ```
 npm i
 ```` 
-para instalar as dependencias
+para instalar as dependencias.
 
-inicie o servidor com 
+Inicie o servidor com 
 ```
 nodemon
 ```
