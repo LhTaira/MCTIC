@@ -2,23 +2,9 @@ var templater = require('./htmlTemplate.js')
 var nodemailer = require("nodemailer");
 var app = require('express')();
 
-// let express = require('express');
-// let app = express()
-
 var util = require('./utils.js')
-const NotificacaoDAO = require('./notificacaoDAO.js')()
-
-const connection = require('./connection.js')()
-
-
-
-
-
-//Rotina do e mail
-//verificar quais emendas precisam que e mails sejam enviados hoje
-//enviar e mail
-//esperar 24 horas
-//rodar novamente
+const NotificacaoDAO = require('../infra/notificacaoDAO.js')()
+const connection = require('../../config/connection.js')()
 
 function sendEMail( destiatario, emailsDeCopia, HTMLDoEmail ){
     date = new Date();
@@ -45,10 +31,8 @@ function sendEMail( destiatario, emailsDeCopia, HTMLDoEmail ){
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error);
-            //res.status(500).send('Erro ao enviar o email.');
         } else {
             console.log('Email enviado: ' + info.response + '\tData: ' + util.getTimeString(date) );
-            //res.status(200).send('Email enviado com sucesso.');
         }
     });
 }
@@ -59,6 +43,7 @@ async function main( resultado, num ) {
     let nomeData
     let diasRestantes
 
+    //Gera o html da emenda com base na data em questao
     switch( num ) {
         case 1:
         for( var i=0; i<resultado.length; i++ ) {
@@ -112,40 +97,20 @@ async function main( resultado, num ) {
         console.log('lol')
     }
 
+    HTMLDasEmendas = arrayDeHTMLDeEmendas.toString().replace(/,/g, '')//transforma o array em uma string e apaga virgulas
 
-    HTMLDasEmendas = arrayDeHTMLDeEmendas.toString().replace(/,/g, '')//transforma o array em uma string 
-
-    var HTMLString = templater.geraHTMLDoEmail(util.getDateString() /*+ ' ' + new Date().toLocaleTimeString()*/, nomeData, HTMLDasEmendas.toString(), diasRestantes, nomeData ).toString();  //recebe (dataDeHohe, proximaData, HTMLEmenda, diasRestantes, nomeData)
-    //console.log(HTMLString)
+    var HTMLString = templater.geraHTMLDoEmail( 
+        util.getDateString(),
+        nomeData,
+        HTMLDasEmendas.toString(),
+        diasRestantes,
+        nomeData ).toString();
 
     var server = app.listen(3000, () => {
         console.log("Servidor Rodando...");
     })
     
-    //sendEMail('luis.taira@mctic.gov.br', HTMLString.toString())
-    
     sendEMail( resultado[0].email, resultado[0].email_cc, HTMLString.toString() )
-    // app.get('/email', async  (req, res) => {
-    //     sendEMail('luis.taira@mctic.gov.br', HTMLString.toString())
-            
-    // })
-
-    //wait
-    // await util.sleep( 1000*60*60*4 )
-
-    // while ( new Date().getHours() != 11) {
-    //     while ( new Date().getHours() > 11 || new Date().getHours() < 6  ) {
-
-    //         await util.sleep( 1000*60*60*4 )
-    //     }
-
-    //     while ( new Date().getHours() > 6 && new Date().getHours() < 10) {
-
-    //         await util.sleep( 1000*60*30 )
-    //     }
-
-    //     await util.sleep ( 1000*60 )
-    // }
     server.close();
 }
 
@@ -155,6 +120,7 @@ async function damn(){
         const con = connection()
         const notificacao = new NotificacaoDAO(con);
 
+        //roda todas as 6 queries e chama a main() somente se receber algum resultado
         notificacao.getNotificacao1( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 1 ) } } )
         notificacao.getNotificacao2( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 2 ) } } )
         notificacao.getNotificacao3( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 3 ) } } )
@@ -162,20 +128,19 @@ async function damn(){
         notificacao.getNotificacao5( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 5 ) } } )
         notificacao.getNotificacao6( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 6 ) } } )
 
-        console.log(new Date().toLocaleTimeString() + ": Esperando 4 horas"); await util.sleep( 1000*60*60*4 )
-
+        //espera até que seja 11 horas
+        console.log(new Date().toLocaleTimeString() + ": Esperando 4 horas");
+        await util.sleep( 1000*60*60*4 )
         while ( new Date().getHours() != 11) {
             while ( new Date().getHours() > 11 || new Date().getHours() <= 5  ) {
-
                 console.log(new Date().toLocaleTimeString() + ": Esperando 4 horas"); await util.sleep( 1000*60*60*4 );
             }
-
             while ( new Date().getHours() > 6 && new Date().getHours() < 10) {
-
-                console.log(new Date().toLocaleTimeString() + ": Esperando 30 minutos"); await util.sleep( 1000*60*30 ); console.log(new Date().toLocaleTimeString() + ": Esperando 30 minutos")
+                console.log(new Date().toLocaleTimeString() + ": Esperando 30 minutos");
+                await util.sleep( 1000*60*30 ); console.log(new Date().toLocaleTimeString() + ": Esperando 30 minutos")
             }
-
-            console.log(new Date().toLocaleTimeString() + ": Esperando 1 minuto"); await util.sleep ( 1000*60 ); console.log(new Date().toLocaleTimeString() + ": Esperando 1 minuto")
+            console.log(new Date().toLocaleTimeString() + ": Esperando 1 minuto");
+            await util.sleep ( 1000*60 ); console.log(new Date().toLocaleTimeString() + ": Esperando 1 minuto")
         }
     }
 }

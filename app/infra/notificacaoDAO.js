@@ -4,7 +4,7 @@ class NotificacaoDAO {
 
     }
 
-    //1
+    //Query 1
     getNotificacao1(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_indicacao_beneficiario,NOW()) AS dias_indicacao_beneficiario,
@@ -15,7 +15,7 @@ class NotificacaoDAO {
         callback);
     }
 
-    //2
+    //Query 2
     getNotificacao2(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_cadastramento_proposta,NOW()) AS dias_cadastramento_proposta,
@@ -26,7 +26,7 @@ class NotificacaoDAO {
         callback);
     }
 
-    //3
+    //Query 3
     getNotificacao3(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_analise_proposta,NOW()) AS dias_analise_proposta,
@@ -37,7 +37,7 @@ class NotificacaoDAO {
         callback);
     }
 
-    //4
+    //Query 4
     getNotificacao4(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_celebracao_convenio,NOW()) AS dias_celebracao_convenio_baixa,
@@ -48,7 +48,7 @@ class NotificacaoDAO {
         callback);
     }
 
-    //5
+    //Query 5
     getNotificacao5(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_celebracao_convenio,NOW()) AS dias_celebracao_convenio_media,
@@ -59,7 +59,7 @@ class NotificacaoDAO {
         callback);
     }
 
-    //6
+    //Query 6
     getNotificacao6(callback) {
         this._connection.query(`SELECT  
         DATEDIFF(legislacao.dt_celebracao_convenio,NOW()) AS dias_celebracao_convenio,

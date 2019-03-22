@@ -4,24 +4,30 @@ module.exports.geraHTMLDaEmenda = function(numero, dias) {
     <tr>
     <td>${numero}</td>
     <td>${dias}</td>
-
-  </tr>
+    
+    </tr>
     `
     return HTMLDaEmenda.toString()
 }
-
-// module.exports.randaCor = function() {
-//     var randa = Math.floor((Math.random() * 3) + 1);
-
-//     switch( randa ) [
-//         case 1
-//     ]
-// }
 
 module.exports.geraHTMLDoEmail = function(dataDeHoje, proximaData, HTMLEmenda, diasRestantes, nomeData) {
     
     //azul MCTIC #028AC6
     //roxo #7656FF
+    /*
+    Variáveis:
+    (dataDeHoje) Ex: 13/03/2019
+    (proximaData) Ex: A data de analise de proposta
+    (diasRestantes) Ex1: 5 dias Ex2: 1 dia
+    (HTMLEmenda[linha]) 
+    Ex:
+    <tr>
+    <td>2019</td>
+    <td>00001</td>
+    <td>Luis</td>
+    <td>5,000,000</td>
+    </tr>
+    */
     let HTMLString = 
     `
     <!DOCTYPE html>
@@ -75,19 +81,5 @@ module.exports.geraHTMLDoEmail = function(dataDeHoje, proximaData, HTMLEmenda, d
     </body>
     </html>
     `
-    /*
-    (dataDeHoje) Ex: 13/03/2019
-    (proximaData) Ex: A data de analise de proposta
-    (diasRestantes) Ex1: 5 dias Ex2: 1 dia
-    (HTMLEmenda[linha]) 
-    Ex:
-    <tr>
-    <td>2019</td>
-    <td>00001</td>
-    <td>Luis</td>
-    <td>5,000,000</td>
-    </tr>
-    */
-
     return HTMLString.toString();
 }
