@@ -36,10 +36,10 @@ function sendEMail( destiatario, emailsDeCopia, HTMLDoEmail ){
     var mailOptions = {
         from: 'noreply@mctic.gov.br',
         to: destiatario,
-        subject: 'E-mail',
+        subject: 'Emendas Parlamentares',
         //text: HTMLDoEmail,
         html: HTMLDoEmail,
-        //cc: emailsDeCopia //Email para quem será enviado como cópia.
+        cc: emailsDeCopia //Email para quem será enviado como cópia.
     };
     
     transporter.sendMail(mailOptions, (error, info) => {

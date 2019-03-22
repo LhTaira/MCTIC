@@ -22,7 +22,7 @@ class NotificacaoDAO {
         emenda.num_emenda, notificacao.* FROM emenda
         INNER JOIN legislacao ON emenda.ano = legislacao.ano
         INNER JOIN notificacao ON legislacao.ano = notificacao.ano
-        WHERE DATEDIFF(legislacao.dt_cadastramento_proposta,NOW()) BETWEEN -1 AND notificacao.cadastramento_proposta`,
+        WHERE DATEDIFF(legislacao.dt_cadastramento_proposta,NOW()) BETWEEN 0 AND notificacao.cadastramento_proposta`,
         callback);
     }
 
