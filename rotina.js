@@ -20,7 +20,7 @@ const connection = require('./connection.js')()
 //esperar 24 horas
 //rodar novamente
 
-function sendEMail(destiatario, HTMLDoEmail){
+function sendEMail( destiatario, emailsDeCopia, HTMLDoEmail ){
     date = new Date();
     const transporter = nodemailer.createTransport({
         host: "correio.mctic.gov.br",
@@ -38,8 +38,8 @@ function sendEMail(destiatario, HTMLDoEmail){
         to: destiatario,
         subject: 'E-mail',
         //text: HTMLDoEmail,
-        html: HTMLDoEmail
-        //cc: '' //Email para quem será enviado como cópia.
+        html: HTMLDoEmail,
+        //cc: emailsDeCopia //Email para quem será enviado como cópia.
     };
     
     transporter.sendMail(mailOptions, (error, info) => {
@@ -57,48 +57,55 @@ async function main( resultado, num ) {
     
     arrayDeHTMLDeEmendas = []
     let nomeData
+    let diasRestantes
 
     switch( num ) {
         case 1:
-        for( var i=1; i<resultado.length; i++ ) {
+        for( var i=0; i<resultado.length; i++ ) {
             arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_indicacao_beneficiario ))
         }
-        nomeData = 'indicacao beneficiario'
+        nomeData = 'Indicação De Beneficiário'
+        diasRestantes = resultado[0].dias_indicacao_beneficiario
         break;
 
         case 2:
-        for( var i=1; i<resultado.length; i++ ) {
+        for( var i=0; i<resultado.length; i++ ) {
             arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_cadastramento_proposta ))
         }
-        nomeData = 'Cadastrameto da proposta'
+        nomeData = 'Cadastrameto De Proposta'
+        diasRestantes = resultado[0].dias_cadastramento_proposta
         break;
 
         case 3:
-        for( var i=1; i<resultado.length; i++ ) {
+        for( var i=0; i<resultado.length; i++ ) {
             arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_analise_proposta ))
         }
-        nomeData = 'Analise da proposta'
+        nomeData = 'Análise De Proposta'
+        diasRestantes = resultado[0].dias_analise_proposta
         break;
 
         case 4:
-        for( var i=1; i<resultado.length; i++ ) {
-            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_celebracao_convenio_baixa ))
+        for( var i=0; i<resultado.length; i++ ) {
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_celebracao_convenio ))
         }
-        nomeData = 'celebracao convenio'
+        nomeData = 'Celebração De Convenio'
+        diasRestantes = resultado[0].dias_celebracao_convenio
         break;
 
         case 5:
-        for( var i=1; i<resultado.length; i++ ) {
-            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_celebracao_convenio_media ))
+        for( var i=0; i<resultado.length; i++ ) {
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_celebracao_convenio ))
         }
-        nomeData = 'celebracao convenio'
+        nomeData = 'Celebração de Convenio'
+        diasRestantes = resultado[0].dias_celebracao_convenio
         break;
 
         case 6:
-        for( var i=1; i<resultado.length; i++ ) {
-            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_celebracao_convenio_alta ))
+        for( var i=0; i<resultado.length; i++ ) {
+            arrayDeHTMLDeEmendas.push(templater.geraHTMLDaEmenda( resultado[i].num_emenda, resultado[i].dias_celebracao_convenio ))
         }
-        nomeData = 'celebracao convenio'
+        nomeData = 'Celebração de Convenio'
+        diasRestantes = resultado[0].dias_celebracao_convenio
         break;
         
         default:
@@ -108,7 +115,7 @@ async function main( resultado, num ) {
 
     HTMLDasEmendas = arrayDeHTMLDeEmendas.toString().replace(/,/g, '')//transforma o array em uma string 
 
-    var HTMLString = templater.geraHTMLDoEmail(util.getDateString() + ' ' + new Date().toLocaleTimeString(), 'A data de analise de proposta', HTMLDasEmendas.toString(), '3 dias', nomeData ).toString();  //recebe (dataDeHohe, proximaData, HTMLEmenda, diasRestantes, nomeData)
+    var HTMLString = templater.geraHTMLDoEmail(util.getDateString() /*+ ' ' + new Date().toLocaleTimeString()*/, nomeData, HTMLDasEmendas.toString(), diasRestantes, nomeData ).toString();  //recebe (dataDeHohe, proximaData, HTMLEmenda, diasRestantes, nomeData)
     //console.log(HTMLString)
 
     var server = app.listen(3000, () => {
@@ -117,11 +124,11 @@ async function main( resultado, num ) {
     
     //sendEMail('luis.taira@mctic.gov.br', HTMLString.toString())
     
-    sendEMail('luis.taira@mctic.gov.br', HTMLString.toString())
-    app.get('/email', async  (req, res) => {
-        sendEMail('luis.taira@mctic.gov.br', HTMLString.toString())
+    sendEMail( resultado[0].email, resultado[0].email_cc, HTMLString.toString() )
+    // app.get('/email', async  (req, res) => {
+    //     sendEMail('luis.taira@mctic.gov.br', HTMLString.toString())
             
-    })
+    // })
 
     //wait
     // await util.sleep( 1000*60*60*4 )
@@ -143,17 +150,34 @@ async function main( resultado, num ) {
 }
 
 async function damn(){
-    //main()
-    const con = connection()
-    const notificacao = new NotificacaoDAO(con);
+    while( true ){
 
-    notificacao.getNotificacao1( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 1 ) } } )
-    notificacao.getNotificacao2( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 2 ) } } )
-    notificacao.getNotificacao3( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 3 ) } } )
-    notificacao.getNotificacao4( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 4 ) } } )
-    notificacao.getNotificacao5( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 5 ) } } )
-    notificacao.getNotificacao6( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 6 ) } } )
+        const con = connection()
+        const notificacao = new NotificacaoDAO(con);
 
+        notificacao.getNotificacao1( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 1 ) } } )
+        notificacao.getNotificacao2( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 2 ) } } )
+        notificacao.getNotificacao3( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 3 ) } } )
+        notificacao.getNotificacao4( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 4 ) } } )
+        notificacao.getNotificacao5( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 5 ) } } )
+        notificacao.getNotificacao6( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 6 ) } } )
+
+        console.log(new Date().toLocaleTimeString() + ": Esperando 4 horas"); await util.sleep( 1000*60*60*4 )
+
+        while ( new Date().getHours() != 11) {
+            while ( new Date().getHours() > 11 || new Date().getHours() <= 5  ) {
+
+                console.log(new Date().toLocaleTimeString() + ": Esperando 4 horas"); await util.sleep( 1000*60*60*4 );
+            }
+
+            while ( new Date().getHours() > 6 && new Date().getHours() < 10) {
+
+                console.log(new Date().toLocaleTimeString() + ": Esperando 30 minutos"); await util.sleep( 1000*60*30 ); console.log(new Date().toLocaleTimeString() + ": Esperando 30 minutos")
+            }
+
+            console.log(new Date().toLocaleTimeString() + ": Esperando 1 minuto"); await util.sleep ( 1000*60 ); console.log(new Date().toLocaleTimeString() + ": Esperando 1 minuto")
+        }
+    }
 }
 
 damn()

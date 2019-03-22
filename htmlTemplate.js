@@ -46,7 +46,7 @@ module.exports.geraHTMLDoEmail = function(dataDeHoje, proximaData, HTMLEmenda, d
     h1 {
     color: white;
     font-family:  arial bold, sans-serif;
-    background-color: #7656FF; 
+    background-color: #028AC6; 
     padding: 8px;
     }
     h2 {
@@ -63,11 +63,11 @@ module.exports.geraHTMLDoEmail = function(dataDeHoje, proximaData, HTMLEmenda, d
     <body>
     <h1>MCTIC</h1>
     <h2>${dataDeHoje}</h2>
-    <p>${proximaData}das seguintes emandas é em ${diasRestantes}</p>
+    <p>A data limite de ${proximaData} das seguintes emendas é em ${diasRestantes} dias</p>
     <table>
     <tr>
     <th>Codigo</th>
-    <th>Dias restantes para o ${nomeData}</th>
+    <th>Dias restantes para a data limite de ${nomeData}</th>
     </tr>
     ${HTMLEmenda}
     </table>

@@ -8,20 +8,20 @@ module.exports = {
     },
 
     wait: async function wait() {
-        
-        while ( new Date().getHours() != 11) {
-            while ( new Date().getHours() > 11 || new Date().getHours() <= 5  ) {
+        await util.sleep( 1000*5 ) 
+        // while ( new Date().getHours() != 11) {
+        //     while ( new Date().getHours() > 11 || new Date().getHours() <= 5  ) {
 
-                await util.sleep( 1000*60*60*4 )
-            }
+        //         await util.sleep( 1000*60*60*4 )
+        //     }
 
-            while ( new Date().getHours() > 6 && new Date().getHours() < 10) {
+        //     while ( new Date().getHours() > 6 && new Date().getHours() < 10) {
 
-                await util.sleep( 1000*60*30 )
-            }
+        //         await util.sleep( 1000*60*30 )
+        //     }
 
-            await util.sleep ( 1000*60 )
-        }
+        //     await util.sleep ( 1000*60 )
+        // }
     },
 
     getDateString: function getDateString() {
