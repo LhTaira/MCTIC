@@ -29,10 +29,11 @@ function sendEMail( destiatario, emailsDeCopia, HTMLDoEmail ){
     };
     
     transporter.sendMail(mailOptions, (error, info) => {
+        
         if (error) {
-            console.log(error);
-        } else {
-            console.log('Email enviado: ' + info.response + '\tData: ' + util.getTimeString(date) );
+            console.log("true");
+        }else {
+            console.log('Email enviado: ' + info.response + '\tHora: ' + new Date().toLocaleTimeString() );
         }
     });
 }
@@ -106,7 +107,7 @@ async function main( resultado, num ) {
         diasRestantes,
         nomeData ).toString();
 
-    var server = app.listen(3000, () => {
+    var server = app.listen(3002, () => {
         console.log("Servidor Rodando...");
     })
     
@@ -121,12 +122,12 @@ async function damn(){
         const notificacao = new NotificacaoDAO(con);
 
         //roda todas as 6 queries e chama a main() somente se receber algum resultado
-        notificacao.getNotificacao1( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 1 ) } } )
-        notificacao.getNotificacao2( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 2 ) } } )
-        notificacao.getNotificacao3( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 3 ) } } )
-        notificacao.getNotificacao4( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 4 ) } } )
-        notificacao.getNotificacao5( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 5 ) } } )
-        notificacao.getNotificacao6( async ( erro, resultado )  => { if( resultado.length != 0 ) { await main( resultado, 6 ) } } )
+        notificacao.getNotificacao1( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 1 ) } } )
+        notificacao.getNotificacao2( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 2 ) } } )
+        notificacao.getNotificacao3( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 3 ) } } )
+        notificacao.getNotificacao4( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 4 ) } } )
+        notificacao.getNotificacao5( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 5 ) } } )
+        notificacao.getNotificacao6( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 6 ) } } )
 
         //espera até que seja 11 horas
         console.log(new Date().toLocaleTimeString() + ": Esperando 4 horas");
