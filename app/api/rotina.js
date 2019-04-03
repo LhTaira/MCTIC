@@ -131,11 +131,11 @@ async function damn(){
         const con = connection()
         const notificacao = new NotificacaoDAO(con);
         var schedule = require('node-schedule');
-            var rotina = schedule.scheduleJob('* * 11 * * *', function() { //Agenda uma função a ser rodada às 11 horas de todo dia
+            var rotina = schedule.scheduleJob('0 0 11 * * *', function() { //Agenda uma função a ser rodada às 11 horas de todo dia
                 console.log("São 11 horas; "+ (new Date).toLocaleString())
                 //roda todas as 6 queries e chama a main() somente se receber algum resultado
                 notificacao.getNotificacao1( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 1 ) } } )
-                   notificacao.getNotificacao2( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 2 ) } } )
+                notificacao.getNotificacao2( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 2 ) } } )
                 notificacao.getNotificacao3( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 3 ) } } )
                 notificacao.getNotificacao4( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 4 ) } } )
                 notificacao.getNotificacao5( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 5 ) } } )
