@@ -115,50 +115,34 @@ async function main( resultado, num ) {
     server.close();
 }
 
+//Cron notation:
+// *    *    *    *    *    *
+// ┬    ┬    ┬    ┬    ┬    ┬
+// │    │    │    │    │    │
+// │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
+// │    │    │    │    └───── month (1 - 12)
+// │    │    │    └────────── day of month (1 - 31)
+// │    │    └─────────────── hour (0 - 23)
+// │    └──────────────────── minute (0 - 59)
+// └───────────────────────── second (0 - 59, OPTIONAL)
+
 async function damn(){
-    while( true ){
 
         const con = connection()
         const notificacao = new NotificacaoDAO(con);
+        var schedule = require('node-schedule');
+            var rotina = schedule.scheduleJob('* * 11 * * *', function() { //Agenda uma função a ser rodada às 11 horas de todo dia
+                console.log("São 11 horas; "+ (new Date).toLocaleString())
+                //roda todas as 6 queries e chama a main() somente se receber algum resultado
+                notificacao.getNotificacao1( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 1 ) } } )
+                   notificacao.getNotificacao2( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 2 ) } } )
+                notificacao.getNotificacao3( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 3 ) } } )
+                notificacao.getNotificacao4( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 4 ) } } )
+                notificacao.getNotificacao5( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 5 ) } } )
+                notificacao.getNotificacao6( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 6 ) } } )
+            }); 
 	
-	if( new Date().getHours() == 11 ) {
-
-	        //roda todas as 6 queries e chama a main() somente se receber algum resultado
-        	notificacao.getNotificacao1( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 1 ) } } )
-       		notificacao.getNotificacao2( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 2 ) } } )
-        	notificacao.getNotificacao3( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 3 ) } } )
-        	notificacao.getNotificacao4( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 4 ) } } )
-        	notificacao.getNotificacao5( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 5 ) } } )
-        	notificacao.getNotificacao6( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 6 ) } } )
-		
-		console.log( 'Esperando 22 horas' )
-		await util.sleep( 1000*60*60*22 )
-
-	}else if( new Date().getHours() == 10 || new Date().getHours() == 9 ) {
-
-		console.log( 'Esperando 30 minutos' );
-		await util.sleep( 1000*60*30 )
-
-	}else{
-		console.log( 'Esperando 22 horas' )
-		await util.sleep( 1000*60*60*22 )
-	}
-	/*
-        //espera até que seja 11 horas
-        console.log(new Date().toLocaleTimeString() + ": Esperando 4 horas");
-        await util.sleep( 1000*60*60*4 )
-        while ( new Date().getHours() != 11) {
-            while ( new Date().getHours() > 11 || new Date().getHours() <= 5  ) {
-                console.log(new Date().toLocaleTimeString() + ": Esperando 4 horas"); await util.sleep( 1000*60*60*4 );
-            }
-            while ( new Date().getHours() > 6 && new Date().getHours() < 10) {
-                console.log(new Date().toLocaleTimeString() + ": Esperando 30 minutos");
-                await util.sleep( 1000*60*30 ); console.log(new Date().toLocaleTimeString() + ": Esperando 30 minutos")
-            }
-            console.log(new Date().toLocaleTimeString() + ": Esperando 1 minuto");
-            await util.sleep ( 1000*60 ); console.log(new Date().toLocaleTimeString() + ": Esperando 1 minuto")
-        }*/
-    }
+    
 }
 
 damn()
