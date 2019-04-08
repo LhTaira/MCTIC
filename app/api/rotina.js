@@ -127,7 +127,7 @@ async function main( resultado, num ) {
 // └───────────────────────── second (0 - 59, OPTIONAL)
 
 async function damn(){
-
+    try {
         const con = connection()
         const notificacao = new NotificacaoDAO(con);
         var schedule = require('node-schedule');
@@ -141,6 +141,10 @@ async function damn(){
                 notificacao.getNotificacao5( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 5 ) } } )
                 notificacao.getNotificacao6( async ( erro, resultado )  => { if( resultado.length != 0 ) { console.log("diferente de 0"); await main( resultado, 6 ) } } )
             }); 
+    }catch(err) {
+        console.log(err+' '+new Date.toLocaleString());
+        damn();
+    }
 	
     
 }
