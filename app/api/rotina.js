@@ -111,7 +111,7 @@ async function main( resultado, num ) {
         console.log("Servidor Rodando...");
     })
     
-    sendEMail( resultado[0].email, resultado[0].email_cc, HTMLString.toString() )
+    await sendEMail( resultado[0].email, resultado[0].email_cc, HTMLString.toString() )
     server.close();
 }
 
