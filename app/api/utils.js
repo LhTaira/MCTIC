@@ -1,6 +1,3 @@
-var util = require('./utils.js')
-let knex = require('knex');
-
 module.exports = {
 
     sleep: function sleep(ms) {
